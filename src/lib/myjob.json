@@ -1,22 +1,33 @@
 {
     "template": {
-        "src": "file:////Users/playra/nexrender-server/test.aep",
-        "composition": "FINAL RENDER",
+        "src": "file:////Users/playra/nexrender-server/template/NEURONEWS/neuronews.aep",
+        "composition": "Instagram_Story",
         "outputModule": "H.264 - Match Render Settings - 15 Mbps",
         "outputExt": "mp4",
         "settingsTemplate": "Best Settings"
     },
     "assets": [
         {
-            "src": "file:////Users/playra/nexrender-server/album/2.png",
-            "type": "image",
-            "layerName": "album"
+            "type": "data",
+            "composition": "Text_02",
+            "layerName": "Text_02",
+            "property": "Source Text",
+            "value": "GOOGLE"
         },
         {
-            "type": "data",
-            "layerName": "Hello",
-            "property": "Source Text",
-            "value": "Hello World"
+            "type": "video",
+            "src": "file:///Users/playra/nexrender-server/video/4.mp4",
+            "layerName": "Video_01"
+        },
+        {
+            "type": "video",
+            "src": "file:///Users/playra/nexrender-server/video/bg-soft.mp4",
+            "layerName": "Video_02"
+        },
+        {
+            "type": "audio",
+            "src": "file:///Users/playra/nexrender-server/audio/news2.mp3",
+            "layerName": "Audio_01"
         }
     ],
     "actions": {
