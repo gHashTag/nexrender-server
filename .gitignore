@@ -22,3 +22,11 @@ MULTISCREEN_INSTA_REEL (converted).aep
 newoutput.mp4
 
 *.mp4
+
+album/kata/
+
+album/
+
+*.jpg
+
+*.png

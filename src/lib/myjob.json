@@ -28,6 +28,12 @@
             "type": "audio",
             "src": "file:///Users/playra/nexrender-server/audio/news2.mp3",
             "layerName": "Audio_01"
+        },
+        {
+            "src": "file:////Users/playra/nexrender-server/album/2.png",
+            "type": "image",
+            "composition": "Instagram_Story",
+            "layerName": "Photo_01"
         }
     ],
     "actions": {
