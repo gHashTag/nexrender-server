@@ -1,0 +1,100 @@
+{
+    "template": {
+        "src": "file:////Users/playra/nexrender-server/MULTISCREEN_INSTA_REEL/MULTISCREEN_INSTA_REEL.aep",
+        "composition": "RENDER_COMP",
+        "outputModule": "H.264 - Match Render Settings - 15 Mbps",
+        "outputExt": "mp4",
+        "settingsTemplate": "Best Settings"
+    },
+    "assets": [
+        {
+            "src": "file:////Users/playra/nexrender-server/album/1.png",
+            "type": "image",
+            "composition": "*",
+            "layerName": "IMG_OR_VID_001_01"
+        },
+        {
+            "src": "file:////Users/playra/nexrender-server/album/2.png",
+            "type": "image",
+            "composition": "*",
+            "layerName": "IMG_OR_VID_001_02"
+        },
+        {
+            "src": "file:////Users/playra/nexrender-server/album/3.png",
+            "type": "image",
+            "composition": "*",
+            "layerName": "IMG_OR_VID_001_03"
+        },
+        {
+            "src": "file:////Users/playra/nexrender-server/album/4.png",
+            "type": "image",
+            "composition": "*",
+            "layerName": "IMG_OR_VID_001_04"
+        },
+        {
+            "src": "file:////Users/playra/nexrender-server/album/5.png",
+            "type": "image",
+            "composition": "*",
+            "layerName": "IMG_OR_VID_001_05"
+        },
+        {
+            "src": "file:////Users/playra/nexrender-server/album/5.png",
+            "type": "image",
+            "composition": "*",
+            "layerName": "IMG_OR_VID_001_06"
+        },
+        {
+            "src": "file:////Users/playra/nexrender-server/album/1.png",
+            "type": "image",
+            "composition": "*",
+            "layerName": "IMG_OR_VID_002_01"
+        },
+        {
+            "src": "file:////Users/playra/nexrender-server/album/2.png",
+            "type": "image",
+            "composition": "*",
+            "layerName": "IMG_OR_VID_002_02"
+        },
+        {
+            "src": "file:////Users/playra/nexrender-server/album/3.png",
+            "type": "image",
+            "composition": "*",
+            "layerName": "IMG_OR_VID_002_03"
+        },
+        {
+            "src": "file:////Users/playra/nexrender-server/album/4.png",
+            "type": "image",
+            "composition": "*",
+            "layerName": "IMG_OR_VID_002_04"
+        },
+        {
+            "src": "file:////Users/playra/nexrender-server/album/5.png",
+            "type": "image",
+            "composition": "*",
+            "layerName": "IMG_OR_VID_002_05"
+        },
+        {
+            "src": "file:////Users/playra/nexrender-server/album/5.png",
+            "type": "image",
+            "composition": "*",
+            "layerName": "IMG_OR_VID_002_06"
+        },
+        {
+            "type": "data",
+            "layerName": "MULTI",
+            "property": "Source Text",
+            "value": "Playra"
+        }
+    ],
+    "actions": {
+        "postrender": [
+            {
+                "module": "@nexrender/action-encode",
+                "preset": "mp4",
+                "output": "/Users/playra/nexrender-server/output/output.mp4"
+            }
+        ]
+    }
+}
+
+   

@@ -9,6 +9,7 @@
   "license": "MIT",
   "keywords": [],
   "scripts": {
+    "watch:build": "tsc -p tsconfig.json -w",
     "start": "node build/main/index.js",
     "build": "run-p build:*",
     "build:main": "tsc -p tsconfig.json",
@@ -24,7 +25,7 @@
     "check-cli": "run-s test diff-integration-tests check-integration-tests",
     "check-integration-tests": "run-s check-integration-test:*",
     "diff-integration-tests": "mkdir -p diff && rm -rf diff/test && cp -r test diff/test && rm -rf diff/test/test-*/.git && cd diff && git init --quiet && git add -A && git commit --quiet --no-verify --allow-empty -m 'WIP' && echo '\\n\\nCommitted most recent integration test output in the \"diff\" directory. Review the changes with \"cd diff && git diff HEAD\" or your preferred git diff viewer.'",
-    "watch:build": "tsc -p tsconfig.json -w",
+  
     "watch:test": "nyc --silent ava --watch",
     "cov": "run-s build test:unit cov:html cov:lcov && open-cli coverage/index.html",
     "cov:html": "nyc report --reporter=html",
@@ -45,11 +46,20 @@
   "dependencies": {
     "@bitauth/libauth": "^1.17.1",
     "@nexrender/core": "^1.57.4",
-    "dotenv": "^16.4.5"
+    "@supabase/supabase-js": "^2.46.1",
+    "axios": "^1.7.7",
+    "creatomate": "^1.2.1",
+    "dotenv": "^16.4.5",
+    "fluent-ffmpeg": "^2.1.3",
+    "openai": "^4.72.0",
+    "punycode2": "^1.0.1",
+    "replicate": "^1.0.1"
   },
   "devDependencies": {
     "@ava/typescript": "^1.1.1",
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
+    "@nexrender/types": "^1.45.6",
+    "@types/fluent-ffmpeg": "^2.1.27",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
     "ava": "^3.12.1",

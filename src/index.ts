@@ -1,4 +1,5 @@
-import 'dotenv/config'
+import 'dotenv/config';
+process.removeAllListeners('warning');
 
 export * from './lib/main';
 
