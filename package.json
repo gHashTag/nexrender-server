@@ -9,6 +9,10 @@
   "license": "MIT",
   "keywords": [],
   "scripts": {
+    "start:render": "ts-node src/lib/main.ts",
+    "dev:server": "ts-node src/lib/server.ts",
+    "dev:worker": "npx @nexrender/worker --binary=\"/Applications/Adobe After Effects 2025/aerender\" --host=http://localhost:3000 --secret=myapisecret",
+    "dev": "concurrently \"pnpm run dev:server\" \"pnpm run dev:worker\"",
     "watch:build": "tsc -p tsconfig.json -w",
     "start": "node build/main/index.js",
     "build": "run-p build:*",
@@ -25,7 +29,6 @@
     "check-cli": "run-s test diff-integration-tests check-integration-tests",
     "check-integration-tests": "run-s check-integration-test:*",
     "diff-integration-tests": "mkdir -p diff && rm -rf diff/test && cp -r test diff/test && rm -rf diff/test/test-*/.git && cd diff && git init --quiet && git add -A && git commit --quiet --no-verify --allow-empty -m 'WIP' && echo '\\n\\nCommitted most recent integration test output in the \"diff\" directory. Review the changes with \"cd diff && git diff HEAD\" or your preferred git diff viewer.'",
-  
     "watch:test": "nyc --silent ava --watch",
     "cov": "run-s build test:unit cov:html cov:lcov && open-cli coverage/index.html",
     "cov:html": "nyc report --reporter=html",
@@ -46,11 +49,15 @@
   "dependencies": {
     "@bitauth/libauth": "^1.17.1",
     "@nexrender/core": "^1.57.4",
+    "@nexrender/server": "^1.54.3",
+    "@nexrender/worker": "^1.57.4",
     "@supabase/supabase-js": "^2.46.1",
     "axios": "^1.7.7",
     "creatomate": "^1.2.1",
     "dotenv": "^16.4.5",
+    "express": "^4.21.1",
     "fluent-ffmpeg": "^2.1.3",
+    "fp-ts": "^2.16.9",
     "openai": "^4.72.0",
     "punycode2": "^1.0.1",
     "replicate": "^1.0.1"
@@ -59,11 +66,14 @@
     "@ava/typescript": "^1.1.1",
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
     "@nexrender/types": "^1.45.6",
+    "@types/express": "^5.0.0",
     "@types/fluent-ffmpeg": "^2.1.27",
+    "@types/node": "^22.9.0",
     "@typescript-eslint/eslint-plugin": "^4.0.1",
     "@typescript-eslint/parser": "^4.0.1",
     "ava": "^3.12.1",
     "codecov": "^3.5.0",
+    "concurrently": "^9.1.0",
     "cspell": "^4.1.0",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^7.8.0",
@@ -77,9 +87,9 @@
     "open-cli": "^6.0.1",
     "prettier": "^2.1.1",
     "standard-version": "^9.0.0",
-    "ts-node": "^9.0.0",
+    "ts-node": "^10.9.2",
     "typedoc": "^0.19.0",
-    "typescript": "^4.0.2"
+    "typescript": "^4.9.5"
   },
   "files": [
     "build/main",

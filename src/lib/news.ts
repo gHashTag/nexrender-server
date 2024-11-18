@@ -13,6 +13,7 @@ import {
   uploadVideo,
 } from './helpers/helpers';
 import { Asset, Job, Template } from './types.spec';
+import { startServer } from './server';
 
 // Определяем базовые пути
 const baseDir = process.cwd();
@@ -123,14 +124,21 @@ const main = async (): Promise<void> => {
       },
     };
 
-    // Рендерим видео
-    await render(job, {
-      binary: '/Applications/Adobe After Effects 2025/aerender',
-      skipCleanup: true, // Для отладки
-      debug: true, // Для отладки
-    });
+    // Отправляем задание на сервер
+    const response = await fetch(
+      `http://localhost:${process.env.NEXRENDER_PORT}/api/v1/jobs`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'nexrender-secret': process.env.NEXRENDER_SECRET || 'myapisecret',
+        },
+        body: JSON.stringify(job),
+      }
+    );
 
-    console.log('Рендеринг завершен успешно');
+    const result = await response.json();
+    console.log('Задание создано:', result);
 
     // После рендеринга обрезаем видео
     await trimVideo(

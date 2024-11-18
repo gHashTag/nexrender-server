@@ -74,7 +74,7 @@ const assets: readonly Asset[] = [
     property: 'Source Text',
     value: 'Phuket, Thailand',
   },
-  ...createImageAssets(23),
+  ...createImageAssets(22),
 ];
 
 const main = async (): Promise<void> => {

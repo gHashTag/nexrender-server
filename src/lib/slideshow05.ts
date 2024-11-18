@@ -16,6 +16,7 @@ import { reuseImagesForNeuroBroker } from './helpers/neurobroker/generateImagesF
 import { instruction, triggerWord, type } from './helpers/neurobroker/mock';
 import { getSellVillaSteps } from './helpers/openaiHelpers';
 import { Asset, Job, Template } from './types.spec';
+import { assetsNews } from './assets';
 
 // Определяем базовые пути
 const baseDir = process.cwd();
@@ -47,118 +48,7 @@ const template: Template = {
   settingsTemplate: 'Best Settings',
 };
 
-type ImageAsset = {
-  readonly src: string;
-  readonly type: 'image';
-  readonly composition: string;
-  readonly layerName: string;
-};
-
-// Функция для создания путей к изображениям
-const createImageAssets = (count: number): readonly ImageAsset[] =>
-  Array.from({ length: count }, (_, i) => ({
-    src: createFileUrl(
-      join(__dirname, `../images/output_${String(i).padStart(2, '0')}.png`)
-    ),
-    type: 'image',
-    composition: `Plch_${String(i + 1).padStart(2, '0')}`,
-    layerName: `${String(i + 1).padStart(2, '0')}.jpg`,
-  }));
 // Определяем ассеты
-const assets: readonly Asset[] = [
-  {
-    type: 'data',
-    composition: 'Scene 1',
-    layerName: 'we are best team',
-    property: 'Source Text',
-    value: 'Condominium KATA',
-  },
-  {
-    type: 'data',
-    composition: 'Scene 1',
-    layerName: 'make an amazing',
-    property: 'Source Text',
-    value: 'Phuket, Thailand',
-  },
-  {
-    type: 'data',
-    composition: 'Scene 2',
-    layerName: 'smileee!',
-    property: 'Source Text',
-    value: 'Tropical Paradise',
-  },
-  {
-    type: 'data',
-    composition: 'Scene 3',
-    layerName: 'travel!',
-    property: 'Source Text',
-    value: 'Heart of Kata Beach',
-  },
-  {
-    type: 'data',
-    composition: 'Scene 4',
-    layerName: 'be yourself',
-    property: 'Source Text',
-    value: "Phuket's Elite Area",
-  },
-  {
-    type: 'data',
-    composition: 'Scene 5',
-    layerName: 'think about yourself',
-    property: 'Source Text',
-    value: '5 Minutes to Ocean',
-  },
-  {
-    type: 'data',
-    composition: 'Scene 7',
-    layerName: 'futuristic',
-    property: 'Source Text',
-    value: 'Kata Beach',
-  },
-  {
-    type: 'data',
-    composition: 'Scene 8',
-    layerName: 'and',
-    property: 'Source Text',
-    value: 'Perfect Balance',
-  },
-  {
-    type: 'data',
-    composition: 'Scene 9',
-    layerName: 'cinematic',
-    property: 'Source Text',
-    value: 'Kata Beach',
-  },
-  {
-    type: 'data',
-    composition: 'Scene 9',
-    layerName: 'view',
-    property: 'Source Text',
-    value: 'Modern Design',
-  },
-  {
-    type: 'data',
-    composition: 'Scene 10',
-    layerName: 'colorful',
-    property: 'Source Text',
-    value: 'Exclusive Living',
-  },
-  {
-    type: 'data',
-    composition: 'Scene 11',
-    layerName: 'make with us!',
-    property: 'Source Text',
-    value: 'Elite',
-  },
-  {
-    type: 'data',
-    composition: 'Scene 11',
-    layerName: 'opener',
-    property: 'Source Text',
-    value: 'Invest Now',
-  },
-  ...createImageAssets(25),
-];
 
 const main = async (): Promise<void> => {
   try {
@@ -205,7 +95,7 @@ const main = async (): Promise<void> => {
     console.log(`Длительность видео ${sourceVideoPath}: ${duration} секунд`);
     const job: Job = {
       template,
-      assets,
+      assets: assetsNews,
       actions: {
         postrender: [
           {

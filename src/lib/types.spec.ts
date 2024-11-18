@@ -21,7 +21,16 @@ export type Job = {
     readonly postrender: ReadonlyArray<{
       readonly module: string;
       readonly preset: string;
-      readonly output: string;
+      readonly output?: string;
+      readonly params?: {
+        readonly '-acodec'?: string;
+        readonly '-ab'?: string;
+        readonly '-ar'?: string;
+        readonly '-vcodec'?: string;
+        readonly '-r'?: string;
+        readonly '-y'?: string;
+        readonly [key: string]: string | undefined;
+      };
     }>;
   };
 };
@@ -32,4 +41,14 @@ export type Template = {
   readonly outputModule: string;
   readonly outputExt: string;
   readonly settingsTemplate: string;
+  readonly output?: string;
+  readonly params?: {
+    readonly '-acodec'?: string;
+    readonly '-ab'?: string;
+    readonly '-ar'?: string;
+    readonly '-vcodec'?: string;
+    readonly '-r'?: string;
+    readonly '-y'?: string;
+    readonly [key: string]: string | undefined; // Для других возможных параметров
+  };
 };

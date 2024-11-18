@@ -9,11 +9,13 @@ coverage
 package-lock.json
 .env
 .DS_Store
-src/audio
-src/video
-src/album
+src/audio/*
+src/video/*
+src/album/*
 nexrender-cli-macos
-audio/
+audio/*
+video/*
+album/*
 
 output/
 
