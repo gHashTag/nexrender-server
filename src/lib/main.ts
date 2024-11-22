@@ -1,14 +1,22 @@
+/* eslint-disable functional/no-let */
+import { existsSync } from 'fs';
+import { join } from 'path';
+
 import axios from 'axios';
+
 import { createRenderJob } from './renderJob';
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const main = async () => {
   try {
-    // Проверяем сервер с повторными попытками
     console.log('\nПроверка сервера...');
     let serverAvailable = false;
-    for (let i = 0; i < 3; i++) {
+
+    await Array.from({ length: 3 }).reduce(async (promise, _, index) => {
+      await promise;
+      if (serverAvailable) return;
+
       try {
         const healthCheck = await axios.get(
           'http://localhost:3000/api/v1/jobs',
@@ -22,28 +30,26 @@ const main = async () => {
         if (healthCheck.status === 200) {
           serverAvailable = true;
           console.log('Сервер доступен');
-          break;
         }
       } catch (error) {
         console.log(
           `Попытка ${
-            i + 1
+            index + 1
           }: Сервер недоступен, повторная попытка через 2 секунды...`
         );
         await sleep(2000);
       }
-    }
+    }, Promise.resolve());
 
     if (!serverAvailable) {
-      throw new Error('Сервер недоступен после нескольких попыток');
+      console.error('Сервер недоступен после нескольких попыток');
+      return;
     }
 
-    // Создаем задание
     console.log('\nСоздание задания...');
     const job = createRenderJob('NEURONEWS');
     console.log('Задание создано');
 
-    // Отправляем задание
     console.log('\nОтправка задания на сервер...');
     const response = await axios.post(
       'http://localhost:3000/api/v1/jobs',
@@ -59,9 +65,7 @@ const main = async () => {
     const jobId = response.data.uid;
     console.log(`Задание принято, ID: ${jobId}`);
 
-    // Отслеживаем прогресс
-    console.log('\nОтслеживание прогресса:');
-    while (true) {
+    const checkProgress = async (jobId: string): Promise<void> => {
       const statusResponse = await axios.get(
         `http://localhost:3000/api/v1/jobs/${jobId}`,
         {
@@ -70,11 +74,8 @@ const main = async () => {
           },
         }
       );
-      console.log(statusResponse.data, 'statusResponse.data');
 
-      const { state, renderProgress, error } = statusResponse.data;
-      console.log(renderProgress, 'renderProgress');
-
+      const { state, renderProgress, error, template } = statusResponse.data;
       console.log(
         `[${new Date().toLocaleTimeString()}] Статус: ${state}, Прогресс: ${
           renderProgress || '0'
@@ -83,17 +84,28 @@ const main = async () => {
 
       if (state === 'finished') {
         console.log('\nРендеринг успешно завершен!', statusResponse.data);
-        console.log('Результат доступен в:', statusResponse.data.output);
-        break;
+        const outputPath =
+          template?.output || join(process.cwd(), 'output', 'neuronews.mp4');
+        console.log('Результат доступен в:', outputPath);
+
+        if (existsSync(outputPath)) {
+          console.log('Файл успешно создан!');
+        } else {
+          console.warn('Внимание: Файл не найден по указанному пути');
+        }
+        return;
       }
 
       if (state === 'error') {
         console.error('\nОшибка рендеринга:', error);
-        break;
+        return;
       }
 
       await sleep(5000);
-    }
+      return checkProgress(jobId);
+    };
+
+    await checkProgress(jobId);
   } catch (error) {
     console.error('\nОшибка:', error);
     process.exit(1);

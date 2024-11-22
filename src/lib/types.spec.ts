@@ -17,22 +17,6 @@ export type Job = {
     readonly settingsTemplate: string;
   };
   readonly assets: readonly Asset[];
-  readonly actions: {
-    readonly postrender: ReadonlyArray<{
-      readonly module: string;
-      readonly preset: string;
-      readonly output?: string;
-      readonly params?: {
-        readonly '-acodec'?: string;
-        readonly '-ab'?: string;
-        readonly '-ar'?: string;
-        readonly '-vcodec'?: string;
-        readonly '-r'?: string;
-        readonly '-y'?: string;
-        readonly [key: string]: string | undefined;
-      };
-    }>;
-  };
 };
 
 export type Template = {

@@ -1,3 +1,4 @@
+import fs from 'fs';
 import { join } from 'path';
 
 import { assetsNews } from './assets';
@@ -5,11 +6,16 @@ import { createFileUrl } from './helpers/helpers';
 import { Job, Template } from './types.spec';
 
 const baseDir = process.cwd();
-// const outputDir = join(baseDir, 'output');
-const outputFileName = 'test.mp4';
-// const outputPath = join(outputDir, outputFileName);
+const outputDir = join(baseDir, 'output');
+const outputFileName = 'neuronews.mp4';
+const outputPath = join(outputDir, outputFileName);
 
 export const createRenderJob = (projectName: string): Job => {
+  // Создаем директорию output, если она не существует
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true });
+  }
+
   // Определяем пути
   const templatePath = join(baseDir, 'template', projectName, `neuronews.aep`);
 
@@ -20,33 +26,19 @@ export const createRenderJob = (projectName: string): Job => {
     outputModule: 'H.264 - Match Render Settings - 15 Mbps',
     outputExt: 'mp4',
     settingsTemplate: 'Best Settings',
-    output: outputFileName,
+    output: outputPath,
   };
 
-  console.log(template, 'template');
+  console.log('Output path:', outputPath); // Для отладки
 
   // Создаем задание
-  const job: Job = {
+  const job = {
     template,
     assets: assetsNews,
-    actions: {
-      postrender: [
-        {
-          module: '@nexrender/action-encode',
-          preset: 'mp4',
-          params: {
-            '-acodec': 'aac',
-            '-ab': '128k',
-            '-ar': '44100',
-            '-vcodec': 'libx264',
-            '-r': '25',
-            '-y': '', // Перезаписывать существующий файл
-          },
-        },
-      ],
-    },
   };
-  console.log(job, 'job');
+
+  // Для отладки
+  console.log('Job configuration:', JSON.stringify(job, null, 2));
 
   return job;
 };
