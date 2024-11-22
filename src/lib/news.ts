@@ -2,8 +2,6 @@
 import { existsSync } from 'fs';
 import { join } from 'path';
 
-import { render } from '@nexrender/core';
-
 import {
   checkFile,
   createFileUrl,
@@ -13,7 +11,8 @@ import {
   uploadVideo,
 } from './helpers/helpers';
 import { Asset, Job, Template } from './types.spec';
-import { startServer } from './server';
+
+const brandName = 'GEMINI';
 
 // Определяем базовые пути
 const baseDir = process.cwd();
@@ -70,7 +69,7 @@ const main = async (): Promise<void> => {
         composition: 'Text_02',
         layerName: 'Text_02',
         property: 'Source Text',
-        value: 'RECRAFT',
+        value: brandName,
       },
       {
         type: 'video',
@@ -113,15 +112,6 @@ const main = async (): Promise<void> => {
     const job: Job = {
       template,
       assets,
-      actions: {
-        postrender: [
-          {
-            module: '@nexrender/action-encode',
-            preset: 'mp4',
-            output: outputPath,
-          },
-        ],
-      },
     };
 
     // Отправляем задание на сервер
