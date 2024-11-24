@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable functional/no-throw-statement */
-import { existsSync } from 'fs';
-import fs from 'fs';
-import { resolve } from 'path';
+import { existsSync } from "fs";
+import fs from "fs";
+import { resolve } from "path";
 
 // eslint-disable-next-line import/order
-import ffmpeg from 'fluent-ffmpeg';
-import { supabase } from '../../core/supabase';
+import ffmpeg from "fluent-ffmpeg";
+import { supabase } from "../../core/supabase";
 
-const Creatomate = require('creatomate');
+const Creatomate = require("creatomate");
 
 if (!process.env.CREATOMATE_API_KEY) {
-  throw new Error('CREATOMATE_API_KEY не установлен');
+  throw new Error("CREATOMATE_API_KEY не установлен");
 }
 
 const client = new Creatomate.Client(process.env.CREATOMATE_API_KEY);
@@ -38,7 +38,7 @@ export const trimVideo = async (
   return new Promise((resolve, reject) => {
     ffmpeg.ffprobe(sourceVideoPath, (err) => {
       if (err) {
-        console.error('Ошибка при получении длительности видео:', err);
+        console.error("Ошибка при получении длительности видео:", err);
         reject(err);
         return;
       }
@@ -47,12 +47,12 @@ export const trimVideo = async (
         .setStartTime(0)
         .setDuration(duration)
         .output(outputVideoPath)
-        .on('end', () => {
-          console.log('Видео успешно обрезано');
+        .on("end", () => {
+          console.log("Видео успешно обрезано");
           resolve();
         })
-        .on('error', (err) => {
-          console.error('Ошибка при обрезке видео:', err);
+        .on("error", (err) => {
+          console.error("Ошибка при обрезке видео:", err);
           reject(err);
         })
         .run();
@@ -65,18 +65,18 @@ export const getVideoDuration = async (videoPath: string): Promise<number> => {
   return new Promise((resolve, reject) => {
     ffmpeg.ffprobe(videoPath, (err, metadata) => {
       if (err) {
-        console.error('Ошибка при получении длительности видео:', err);
+        console.error("Ошибка при получении длительности видео:", err);
         reject(err);
         return;
       }
 
       const duration = metadata?.format?.duration;
       if (!duration) {
-        reject(new Error('Не удалось получить длительность видео'));
+        reject(new Error("Не удалось получить длительность видео"));
         return;
       }
 
-      console.log('Длительность исходного видео:', duration);
+      console.log("Длительность исходного видео:", duration);
       resolve(duration);
     });
   });
@@ -93,12 +93,12 @@ export async function uploadVideo(
     const { data, error } = await supabase.storage
       .from(bucket)
       .upload(fileName, file, {
-        contentType: 'video/mp4',
+        contentType: "video/mp4",
         upsert: true,
       });
 
     if (error) {
-      console.error('Ошибка при загрузке видео:', error.message);
+      console.error("Ошибка при загрузке видео:", error.message);
       throw error;
     }
 
@@ -107,7 +107,7 @@ export async function uploadVideo(
       data: { publicUrl },
     } = supabase.storage.from(bucket).getPublicUrl(data.path);
 
-    console.log('Видео успешно загружено:', {
+    console.log("Видео успешно загружено:", {
       ...data,
       publicUrl,
     });
@@ -117,7 +117,7 @@ export async function uploadVideo(
       publicUrl,
     };
   } catch (error) {
-    console.error('Ошибка при загрузке видео:', error);
+    console.error("Ошибка при загрузке видео:", error);
     throw error;
   }
 }
@@ -135,12 +135,14 @@ export const createRender = async ({
       modifications: modifications,
     };
 
-    const renders = await client.render(options);
-    console.log('Completed:', renders);
+    const renders = await client.render(options, {
+      debug: true,
+    });
+    console.log("Completed:", renders);
 
     return renders;
   } catch (error) {
-    console.error('Ошибка создания рендера:', error);
+    console.error("Ошибка создания рендера:", error);
     throw error;
   }
 };

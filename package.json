@@ -10,7 +10,7 @@
   "keywords": [],
   "scripts": {
     "start": "NODE_ENV=production ts-node src/index.ts",
-    "start:render": "NODE_ENV=development ts-node src/core/main.ts",
+    "start:render": "NODE_ENV=development ts-node src/main.ts",
     "dev": "NODE_ENV=development concurrently \"pnpm run dev:server\" \"pnpm run dev:worker\"",
     "dev:server": "ts-node src/api/server.ts",
     "dev:worker": "NODE_OPTIONS='--no-warnings' npx @nexrender/worker --binary=\"/Applications/Adobe After Effects 2025/aerender\" --host=http://localhost:3000 --secret=myapisecret",
