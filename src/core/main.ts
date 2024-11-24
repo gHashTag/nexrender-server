@@ -1,16 +1,16 @@
 /* eslint-disable functional/no-let */
-import { existsSync } from 'fs';
-import { join } from 'path';
+import { existsSync } from "fs";
+import { join } from "path";
 
-import axios from 'axios';
+import axios from "axios";
 
-import { createRenderJob } from './renderJob';
+import { createRenderJob } from "../services/renderService";
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const main = async () => {
   try {
-    console.log('\nПроверка сервера...');
+    console.log("\nПроверка сервера...");
     let serverAvailable = false;
 
     await Array.from({ length: 3 }).reduce(async (promise, _, index) => {
@@ -19,17 +19,17 @@ const main = async () => {
 
       try {
         const healthCheck = await axios.get(
-          'http://localhost:3000/api/v1/jobs',
+          "http://localhost:3000/api/v1/jobs",
           {
             headers: {
-              'nexrender-secret': process.env.NEXRENDER_SECRET || 'myapisecret',
+              "nexrender-secret": process.env.NEXRENDER_SECRET || "myapisecret",
             },
             timeout: 2000,
           }
         );
         if (healthCheck.status === 200) {
           serverAvailable = true;
-          console.log('Сервер доступен');
+          console.log("Сервер доступен");
         }
       } catch (error) {
         console.log(
@@ -42,22 +42,22 @@ const main = async () => {
     }, Promise.resolve());
 
     if (!serverAvailable) {
-      console.error('Сервер недоступен после нескольких попыток');
+      console.error("Сервер недоступен после нескольких попыток");
       return;
     }
 
-    console.log('\nСоздание задания...');
-    const job = createRenderJob('NEURONEWS');
-    console.log('Задание создано');
+    console.log("\nСоздание задания...");
+    const job = await createRenderJob("neuronews");
+    console.log("Задание создано");
 
-    console.log('\nОтправка задания на сервер...');
+    console.log("\nОтправка задания на сервер...");
     const response = await axios.post(
-      'http://localhost:3000/api/v1/jobs',
+      "http://localhost:3000/api/v1/jobs",
       job,
       {
         headers: {
-          'Content-Type': 'application/json',
-          'nexrender-secret': process.env.NEXRENDER_SECRET || 'myapisecret',
+          "Content-Type": "application/json",
+          "nexrender-secret": process.env.NEXRENDER_SECRET || "myapisecret",
         },
       }
     );
@@ -70,7 +70,7 @@ const main = async () => {
         `http://localhost:3000/api/v1/jobs/${jobId}`,
         {
           headers: {
-            'nexrender-secret': process.env.NEXRENDER_SECRET || 'myapisecret',
+            "nexrender-secret": process.env.NEXRENDER_SECRET || "myapisecret",
           },
         }
       );
@@ -78,26 +78,26 @@ const main = async () => {
       const { state, renderProgress, error, template } = statusResponse.data;
       console.log(
         `[${new Date().toLocaleTimeString()}] Статус: ${state}, Прогресс: ${
-          renderProgress || '0'
+          renderProgress || "0"
         }%`
       );
 
-      if (state === 'finished') {
-        console.log('\nРендеринг успешно завершен!', statusResponse.data);
+      if (state === "finished") {
+        console.log("\nРендеринг успешно завершен!", statusResponse.data);
         const outputPath =
-          template?.output || join(process.cwd(), 'output', 'neuronews.mp4');
-        console.log('Результат доступен в:', outputPath);
+          template?.output || join(process.cwd(), "output", "neuronews.mp4");
+        console.log("Результат доступен в:", outputPath);
 
         if (existsSync(outputPath)) {
-          console.log('Файл успешно создан!');
+          console.log("Файл успешно создан!");
         } else {
-          console.warn('Внимание: Файл не найден по указанному пути');
+          console.warn("Внимание: Файл не найден по указанному пути");
         }
         return;
       }
 
-      if (state === 'error') {
-        console.error('\nОшибка рендеринга:', error);
+      if (state === "error") {
+        console.error("\nОшибка рендеринга:", error);
         return;
       }
 
@@ -107,7 +107,7 @@ const main = async () => {
 
     await checkProgress(jobId);
   } catch (error) {
-    console.error('\nОшибка:', error);
+    console.error("\nОшибка:", error);
     process.exit(1);
   }
 };

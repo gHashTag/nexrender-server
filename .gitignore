@@ -32,3 +32,7 @@ album/
 *.jpg
 
 *.png
+
+src/assets/audio/
+
+src/assets/images/

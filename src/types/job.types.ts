@@ -33,6 +33,6 @@ export type Template = {
     readonly '-vcodec'?: string;
     readonly '-r'?: string;
     readonly '-y'?: string;
-    readonly [key: string]: string | undefined; // Для других возможных параметров
+    readonly [key: string]: string | undefined;
   };
 };
