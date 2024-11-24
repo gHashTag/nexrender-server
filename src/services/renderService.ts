@@ -1,4 +1,5 @@
 import { join } from "path";
+import { existsSync } from "fs";
 import { CONFIG } from "../config/constants";
 import { Asset, Job } from "../types/job.types";
 import { TemplateAssets } from "../types/template.types";
@@ -37,20 +38,26 @@ export const createRenderJob = async (
   customAssets?: Partial<TemplateAssets>
 ): Promise<Job> => {
   const templateDir = join(
-    process.cwd(),
+    CONFIG.paths.base,
     "src",
     CONFIG.paths.templates,
     templateName
   );
-  const outputDir = join(process.cwd(), "output");
+  const outputDir = join(CONFIG.paths.base, CONFIG.paths.output);
 
   ensureDirectories([outputDir]);
 
-  const configPath = join(templateDir, "config");
+  const configPath = join(templateDir, "config.ts");
   const { config, assets } = await import(configPath);
 
-  const aepPath = join(templateDir, `${config.name}.aep`);
+  // Используем путь к .aep файлу из конфига
+  const aepPath = config.aepPath;
   const outputPath = join(outputDir, `${templateName}.mp4`);
+
+  // Проверяем существование .aep файла
+  if (!existsSync(aepPath)) {
+    throw new Error(`AEP file not found at: ${aepPath}`);
+  }
 
   return {
     template: {

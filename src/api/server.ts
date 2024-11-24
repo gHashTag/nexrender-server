@@ -11,3 +11,5 @@ server.listen(port, secret, () => {
     `secret: ${secret}`,
   ]);
 });
+
+export { server };

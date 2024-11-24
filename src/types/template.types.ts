@@ -5,6 +5,7 @@ export type TemplateConfig = {
   readonly outputModule: string;
   readonly outputExt: string;
   readonly settingsTemplate: string;
+  readonly aepPath: string;
 };
 
 export type TemplateAssets = {

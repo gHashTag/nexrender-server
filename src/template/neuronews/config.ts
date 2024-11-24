@@ -1,16 +1,34 @@
 import { join } from "path";
 import { TemplateAssets, TemplateConfig } from "../../types/template.types";
+import { CONFIG } from "../../config/constants";
 
-const baseDir = process.cwd();
-const assetsDir = join(baseDir, "src", "template", "neuronews", "Assets");
-
-export const config: TemplateConfig = {
+const TEMPLATE_CONFIG = {
   name: "news",
   composition: "Instagram_Story",
+  paths: {
+    template: join(
+      CONFIG.paths.base,
+      "src",
+      CONFIG.paths.templates,
+      "neuronews"
+    ),
+    assets: "Assets",
+  },
+};
+
+export const config: TemplateConfig = {
+  name: TEMPLATE_CONFIG.name,
+  composition: TEMPLATE_CONFIG.composition,
   outputModule: "H.264 - Match Render Settings - 15 Mbps",
   outputExt: "mp4",
   settingsTemplate: "Best Settings",
+  aepPath: join(TEMPLATE_CONFIG.paths.template, "news.aep"),
 };
+
+const assetsDir = join(
+  TEMPLATE_CONFIG.paths.template,
+  TEMPLATE_CONFIG.paths.assets
+);
 
 export const assets: TemplateAssets = {
   videos: [
