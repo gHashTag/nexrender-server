@@ -1,4 +1,4 @@
-import { openai } from '../../core/openai';
+import { openai } from "../../services/openai";
 
 type GetSellVillaStepsProps = {
   readonly prompt: string;
@@ -13,30 +13,30 @@ export async function getSellVillaSteps({
 }: GetSellVillaStepsProps) {
   try {
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: "gpt-4o-mini",
       messages: [
         {
-          role: 'system',
+          role: "system",
           content: `You are a helpful assistant that creates steps for selling a ${type} in a tourist area in location: ${location}. Create a creative sales description every time`,
         },
         {
-          role: 'user',
+          role: "user",
           content: prompt,
         },
       ],
       temperature: 0.9,
-      response_format: { type: 'json_object' },
+      response_format: { type: "json_object" },
     });
 
     const content = completion.choices[0].message.content;
     if (content === null) {
-      console.error('Received null content from OpenAI');
+      console.error("Received null content from OpenAI");
       return;
     }
 
     return JSON.parse(content);
   } catch (error) {
-    console.error('Error:', error);
+    console.error("Error:", error);
     return Promise.reject(error);
   }
 }

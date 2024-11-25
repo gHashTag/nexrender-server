@@ -1,9 +1,10 @@
-import fs from 'fs';
-import path from 'path';
+import fs from "fs";
+import path from "path";
 
-import Replicate from 'replicate';
+import Replicate from "replicate";
 
-import { Step } from './generateAssets';
+import { Step } from "./generateAssets";
+import { downloadImage } from "../downloadImage";
 
 export const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
@@ -11,104 +12,128 @@ export const replicate = new Replicate({
 
 type ImageResult = {
   readonly imagePath: string;
-  readonly text: '';
+  readonly text: "";
 };
 
-export async function generateImagesForNeuroBroker(
-  steps: readonly Step[]
-): Promise<readonly ImageResult[]> {
-  try {
-    console.log('=== Начало generateImagesForNeuroBroker ===');
-    console.log('Текущая директория:', __dirname);
+export async function generateImagesForNeuroBroker(steps: Step[]) {
+  const imagesWithText: { imagePath: string; text: string }[] = [];
+  console.log(imagesWithText, "imagesWithText");
+  console.log("Начинаем генерацию изображений для медитации");
+  console.log(steps, "steps");
 
-    // Проверяем существование директории images
-    const imagesDir = path.join(__dirname, '../../../images');
-    if (!fs.existsSync(imagesDir)) {
-      console.log('Создаем директорию images:', imagesDir);
-      fs.mkdirSync(imagesDir, { recursive: true });
-    }
+  for (const step of steps) {
+    try {
+      // const model = "ghashtag/so_origin_kata:e82316f373dea8e2e97748d7dbfe269895a70e2891c18a2403a2080c942bb5b2"
+      // const model = "ghashtag/artrio:46074c6d3a8074f6564be098ec32b4e1c9e03e661d9386b4e66a898fb535d702"
+      const model =
+        "ghashtag/modeva:c37189f6adde9084209e850c631d88a5d8de1e94f226e7c7ed2a9446f46897aa";
+      console.log(model, "model");
+      const input = {
+        prompt: step.details.en,
+        model: "dev",
+        lora_scale: 1,
+        num_outputs: 1,
+        aspect_ratio: "9:16",
+        output_format: "png",
+        guidance_scale: 3.5,
+        output_quality: 90,
+        prompt_strength: 0.8,
+        extra_lora_scale: 1,
+        num_inference_steps: 28,
+      };
+      console.log(input, "input");
 
-    if (!steps?.[0]?.details) {
-      console.error('Отсутствует описание первого шага');
-      return [];
-    }
+      let retries = 11;
+      let output;
 
-    const firstStepDetails = steps[0].details;
-    console.log('Детали первого шага:', firstStepDetails);
-
-    const results = await Promise.all(
-      Array.from({ length: 25 }, async (_, index) => {
-        const paddedIndex = String(index).padStart(2, '0');
-        console.log(`\nГенерация изображения ${paddedIndex} из 25`);
-
+      while (retries > 0) {
         try {
-          const model =
-            'ghashtag/so_origin_kata:e82316f373dea8e2e97748d7dbfe269895a70e2891c18a2403a2080c942bb5b2';
-
-          const input = {
-            prompt: firstStepDetails,
-            model: 'dev',
-            lora_scale: 1,
-            num_outputs: 1,
-            aspect_ratio: '9:16',
-            output_format: 'png',
-            guidance_scale: 3.5,
-            output_quality: 90,
-            prompt_strength: 0.8,
-            extra_lora_scale: 1,
-            num_inference_steps: 28,
-          };
-
-          const outputPath = path.join(
-            __dirname,
-            `../../../images/output_${paddedIndex}.png`
+          console.log(
+            `Попытка генерации изображения для шага ${step.step} (осталось попыток: ${retries})`
           );
-          console.log('Путь сохранения:', outputPath);
-
-          const output = await replicate.run(model, {
-            input: input,
-          });
-
-          // output это массив URL'ов
-          if (!Array.isArray(output) || !output[0]) {
-            return {
-              imagePath: '',
-              text: 'Некорректный ответ от API',
-            };
+          output = await replicate.run(model, { input });
+          console.log(output, "✅ выход output");
+          if (output && output[0]) {
+            console.log(
+              `Изображение успешно сгенерировано для шага ${step.step}`
+            );
+            break;
           }
-
-          const imageUrl = output[0];
-          console.log('Получен URL изображения:', imageUrl);
-
-          await saveImage(imageUrl, outputPath);
-          console.log('Изображение сохранено успешно');
-
-          return {
-            imagePath: outputPath,
-            text: '',
-          };
-        } catch (error) {
+        } catch (error: any) {
           console.error(
-            `Ошибка при генерации изображения ${paddedIndex}:`,
-            error
+            `Ошибка при генерации изображения для шага ${step.step}:`,
+            error.message
           );
-          return {
-            imagePath: '',
-            text: '',
-          };
+          retries--;
+          if (retries === 0) {
+            throw error;
+          }
         }
-      })
-    );
+      }
 
-    console.log('=== Конец generateImagesForNeuroBroker ===');
-    console.log('Количество результатов:', results.length);
-    return results as readonly ImageResult[];
-  } catch (error) {
-    console.error('Ошибка в generateImagesForNeuroBroker:', error);
-    return [];
+      if (output) {
+        const imagePath = output;
+        console.log(imagePath, "imagePath");
+        // const text = step.details[language];
+        // console.log(text, "text");
+        console.log(step, "step");
+        try {
+          // const processedImage = await addTextOnImage({ imagePath, text, step: step.step });
+
+          // if (processedImage) {
+          //   imagesWithText.push({ imagePath: processedImage.outputPath, text });
+          //   console.log(`Изображение успешно обработано и сохранено для шага ${step.step}`);
+          // }
+          const outputFilePath = path.join(
+            __dirname,
+            `../images/output_step_${step.step}.png`
+          );
+          console.log(outputFilePath, "outputFilePath");
+          const localImagePath = await downloadImage(
+            imagePath as unknown as string,
+            outputFilePath
+          );
+
+          // Добавляем локальный путь к изображению в массив
+          imagesWithText.push({ imagePath: localImagePath, text: "" }); // Оставьте текст пустым или удалите его
+
+          console.log(
+            `Изображение успешно обработано и сохранено для шага ${step.step}`
+          );
+        } catch (error: any) {
+          console.error(
+            `Oшибка при обработке изображения для шага ${step.step}:`,
+            error.message
+          );
+          throw error; // Перебрасываем ошибку, чтобы использовать запасное изображение
+        }
+      } else {
+        throw new Error(
+          `Не удалось сгенерировать изображение для шага ${step.step}`
+        );
+      }
+    } catch (error: any) {
+      console.error(`Ошибка при работе с шагом ${step.step}:`, error.message);
+      // Используем запасное изображение только если не удалось сгенерировать или обработать изображение
+      // const fallbackImagePath = path.join(process.cwd(), "src/assets/fallback-image.jpg");
+      // const text = `${step.details}`;
+      // try {
+      //   const processedImage = await addTextOnImage({ imagePath: fallbackImagePath, text, step: step.step });
+      //   if (processedImage) {
+      //     imagesWithText.push({ imagePath: processedImage.outputPath, text });
+      //     console.log(`Использовано запасное изображение для шага ${step.step}`);
+      //   }
+      // } catch (fallbackError: any) {
+      //   console.error(`Ошибка при использовании запасного изображения для шага ${step.step}:`, fallbackError.message);
+      // }
+    }
   }
-}
 
+  console.log(
+    `Генерация изображений завершена. Всего изображений: ${imagesWithText.length}`
+  );
+  return imagesWithText;
+}
 // Вспомогательная функция для сохранения изображения
 async function saveImage(url: string, outputPath: string): Promise<void> {
   try {
@@ -118,10 +143,10 @@ async function saveImage(url: string, outputPath: string): Promise<void> {
       return;
     }
     const buffer = await response.arrayBuffer();
-    await fs.promises.writeFile(outputPath, Buffer.from(buffer), 'binary');
+    await fs.promises.writeFile(outputPath, Buffer.from(buffer), "binary");
     console.log(`Изображение сохранено: ${outputPath}`);
   } catch (error) {
-    console.error('Ошибка при сохранении изображения:', error);
+    console.error("Ошибка при сохранении изображения:", error);
   }
 }
 
@@ -129,35 +154,35 @@ export async function reuseImagesForNeuroBroker(): Promise<
   readonly ImageResult[]
 > {
   try {
-    console.log('=== Начало reuseImagesForNeuroBroker ===');
+    console.log("=== Начало reuseImagesForNeuroBroker ===");
 
-    const imagesDir = path.join(__dirname, '../../../images');
+    const imagesDir = path.join(__dirname, "../../../images");
     if (!fs.existsSync(imagesDir)) {
-      console.error('Директория images не существует:', imagesDir);
+      console.error("Директория images не существует:", imagesDir);
       return [];
     }
 
     // Получаем список всех PNG файлов в директории
     const files = fs
       .readdirSync(imagesDir)
-      .filter((file) => file.startsWith('output_') && file.endsWith('.png'))
+      .filter((file) => file.startsWith("output_") && file.endsWith(".png"))
       .sort((a, b) => {
         // Сортируем по номеру в имени файла
-        const numA = parseInt(a.match(/output_(\d+)\.png/)?.[1] || '0');
-        const numB = parseInt(b.match(/output_(\d+)\.png/)?.[1] || '0');
+        const numA = parseInt(a.match(/output_(\d+)\.png/)?.[1] || "0");
+        const numB = parseInt(b.match(/output_(\d+)\.png/)?.[1] || "0");
         return numA - numB;
       });
 
     const results = files.map((file) => ({
       imagePath: path.join(imagesDir, file),
-      text: '',
+      text: "",
     }));
 
-    console.log('=== Конец reuseImagesForNeuroBroker ===');
-    console.log('Количество результатов:', results.length);
+    console.log("=== Конец reuseImagesForNeuroBroker ===");
+    console.log("Количество результатов:", results.length);
     return results as readonly ImageResult[];
   } catch (error) {
-    console.error('Ошибка в reuseImagesForNeuroBroker:', error);
+    console.error("Ошибка в reuseImagesForNeuroBroker:", error);
     return [];
   }
 }

@@ -70,7 +70,7 @@ export const assets: TemplateAssets = {
     {
       layerName: "Text_02",
       property: "Source Text",
-      defaultValue: "NEURONEWS",
+      defaultValue: "GEMINI 2.0",
       composition: "Text_02",
     },
   ],

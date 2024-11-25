@@ -7,7 +7,7 @@ import axios from "axios";
 import { createRenderJob } from "./services/renderService";
 import { config } from "./template/neuronews/config";
 
-const templateName = "slideshow01";
+const templateName = "neuronews";
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 

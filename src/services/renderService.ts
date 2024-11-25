@@ -3,7 +3,7 @@ import { existsSync } from "fs";
 import { CONFIG } from "../config/constants";
 import { Asset, Job } from "../types/job.types";
 import { TemplateAssets } from "../types/template.types";
-import { ensureDirectories } from "../utils/fileUtils";
+
 import { createFileUrl } from "./fileService";
 
 export const formatAssets = (assets: TemplateAssets): readonly Asset[] => [
@@ -44,8 +44,6 @@ export const createRenderJob = async (
     templateName
   );
   const outputDir = join(CONFIG.paths.base, CONFIG.paths.output);
-
-  ensureDirectories([outputDir]);
 
   const configPath = join(templateDir, "config.ts");
   const { config, assets } = await import(configPath);

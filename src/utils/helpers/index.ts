@@ -6,7 +6,7 @@ import { resolve } from "path";
 
 // eslint-disable-next-line import/order
 import ffmpeg from "fluent-ffmpeg";
-import { supabase } from "../../core/supabase";
+import { supabase } from "../../services/supabase";
 
 const Creatomate = require("creatomate");
 

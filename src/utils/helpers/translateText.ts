@@ -1,4 +1,4 @@
-import { openai } from '../../core/openai';
+import { openai } from "../../services/openai";
 
 export async function translateText(
   text: string,
@@ -7,17 +7,17 @@ export async function translateText(
 ): Promise<string> {
   try {
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: "gpt-4o",
       messages: [
         {
-          role: 'system',
+          role: "system",
           content: `You are a professional translator. Don't translate the trigger **word ${triggerWord}** and leave it in English. Always answer with letters, without using numbers. Translate the following text to ${targetLang}. Preserve the original meaning and tone as much as possible. ${
-            targetLang === 'ru' &&
-            'In Cyrillic all words. Правильно писать **на острове Пхукет**. Это связано с тем, что острова, в том числе Пхукет, в русском языке чаще всего употребляются с предлогом «на».'
+            targetLang === "ru" &&
+            "In Cyrillic all words. Правильно писать **на острове Пхукет**. Это связано с тем, что острова, в том числе Пхукет, в русском языке чаще всего употребляются с предлогом «на»."
           }`,
         },
         {
-          role: 'user',
+          role: "user",
           content: text,
         },
       ],
@@ -27,12 +27,12 @@ export async function translateText(
     const translatedText = completion.choices[0].message.content;
     // console.log(translatedText, "translatedText");
     if (translatedText === null) {
-      return Promise.reject(new Error('Received null content from OpenAI'));
+      return Promise.reject(new Error("Received null content from OpenAI"));
     }
 
     return translatedText;
   } catch (error) {
-    console.error('Error in translation:', error);
+    console.error("Error in translation:", error);
     return Promise.reject(error);
   }
 }
