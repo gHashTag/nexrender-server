@@ -70,7 +70,7 @@ export const assets: TemplateAssets = {
     {
       layerName: "Text_02",
       property: "Source Text",
-      defaultValue: "GEMINI 2.0",
+      defaultValue: "Frames",
       composition: "Text_02",
     },
   ],
