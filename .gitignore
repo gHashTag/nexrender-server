@@ -1,39 +1,90 @@
-.idea/*
-.nyc_output
-build
-node_modules
-test
-src/**.js
-coverage
-*.log
+# Dependencies
+node_modules/
+.pnpm-store/
 package-lock.json
-.env
-.DS_Store
-src/audio/*
-src/video/*
-src/album/*
-nexrender-cli-macos
-audio/*
-video/*
-album/*
+yarn.lock
 
+# Environment variables
+.env
+.env.local
+.env.production
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build outputs
+build/
+dist/
+.nyc_output
+coverage/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Nexrender temporary and output files
+temp/
+output/
+*.mp4
+*.mov
+*.avi
+*.mkv
+
+# Audio files (except template assets)
+*.mp3
+*.wav
+*.aac
+*.m4a
+# Allow template assets
+!src/template/*/Assets/*.mp3
+!src/template/*/Assets/*.wav
+
+# Image files (except template assets)  
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+*.svg
+# Allow template assets
+!src/template/*/Assets/*.jpg
+!src/template/*/Assets/*.jpeg
+!src/template/*/Assets/*.png
+
+# After Effects files (except main templates)
+*.aep
+!src/template/*/config.ts
+!src/template/*/*.aep
+# Exclude auto-save files
+*auto-save*.aep
+*Adobe After Effects Auto-Save/
+
+# Course content
 src/courses/ai-init-ru/*
 src/courses/ai-init-en/*
+src/courses/ai-init.zip
 
-MULTISCREEN_INSTA_REEL (converted).aep
-
-newoutput.mp4
-
-*.mp4
-
-album/kata/
-
+# Legacy folders
+src/audio/
+src/video/
+src/album/
+audio/
+video/
 album/
-
-*.jpg
-
-*.png
-
 src/assets/audio/
-
 src/assets/images/
+
+# Large binary files
+nexrender-cli-macos
+*.dmg
+*.exe
+*.msi
