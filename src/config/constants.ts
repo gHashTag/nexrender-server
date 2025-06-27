@@ -1,9 +1,9 @@
 // config/constants.ts
 export const CONFIG = {
   server: {
-    port: process.env.NEXRENDER_PORT || 3000,
+    port: process.env.NEXRENDER_PORT,
     secret: process.env.NEXRENDER_SECRET || "myapisecret",
-    baseUrl: "http://localhost:3000",
+    baseUrl: `http://localhost:${process.env.NEXRENDER_PORT}`,
   },
   paths: {
     base: process.cwd(),
