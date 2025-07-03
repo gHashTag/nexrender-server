@@ -1,0 +1,18 @@
+# Railway Ignore - exclude large files and folders
+temp/
+output/
+*.mp4
+*.mov
+*.mp3
+*.wav
+*.jpg
+*.png
+*.jpeg
+*.gif
+nexrender-cli-macos
+node_modules/
+.git/
+build/
+*.log
+.nyc_output/
+.DS_Store

@@ -1,6 +1,7 @@
 {
   "build": {
-    "builder": "dockerfile"
+    "builder": "dockerfile",
+    "dockerfilePath": "Dockerfile.wine"
   },
   "deploy": {
     "restartPolicyType": "always",

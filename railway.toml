@@ -1,0 +1,18 @@
+[build]
+builder = "dockerfile"
+
+[deploy]
+startCommand = "/app/start.sh"
+healthcheckPath = "/"
+healthcheckTimeout = 300
+restartPolicyType = "always"
+
+[[services]]
+name = "nexrender-server"
+
+[services.build]
+builder = "dockerfile"
+buildCommand = ""
+
+[services.deploy]
+startCommand = "/app/start.sh"

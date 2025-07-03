@@ -1,0 +1,87 @@
+# 🕉️ Dockerfile for Nexrender with Wine on Ubuntu for Railway
+# "प्रज्ञानामृतं" - "Мудрость - это нектар бессмертия"
+
+# 1. Base Image: Ubuntu 22.04
+FROM ubuntu:22.04
+
+# Set frontend to noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
+
+# 2. Install Core Dependencies & Add Wine Keys/Repo
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    software-properties-common \
+    wget \
+    curl \
+    gnupg \
+    ca-certificates \
+    xvfb \
+    x11vnc \
+    fluxbox \
+    wmctrl \
+    unzip \
+    cabextract \
+    ffmpeg \
+    && dpkg --add-architecture i386 \
+    && mkdir -p /etc/apt/keyrings \
+    && wget -qO /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key \
+    && wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources \
+    && apt-get update
+
+# 3. Install Wine
+RUN apt-get install -y --install-recommends winehq-stable
+
+# 4. Install Node.js (v18) and pnpm
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install -g pnpm
+
+# 5. Setup Winetricks for installing Windows components
+RUN wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks \
+    && chmod +x winetricks \
+    && mv winetricks /usr/local/bin
+
+# 6. Create App Directory and User
+WORKDIR /app
+RUN useradd -ms /bin/bash appuser
+USER appuser
+
+# Set Wine environment for the new user
+ENV WINEPREFIX=/app/.wine
+ENV WINEARCH=win64
+
+# 7. Install Project Dependencies
+# Copy only package files first to leverage Docker cache
+COPY --chown=appuser:appuser package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
+
+# 8. Copy Project Files
+COPY --chown=appuser:appuser . .
+
+# 9. Build the Project
+RUN pnpm run build
+
+# 10. Create necessary directories
+RUN mkdir -p /app/temp /app/output /app/logs
+
+# 11. Set Environment Variables
+ENV NODE_ENV=production
+ENV NEXRENDER_PORT=3000
+ENV DISPLAY=:99
+# VNC port
+EXPOSE 5900
+# Nexrender server port
+EXPOSE 3000
+
+# 12. Startup Script
+COPY --chown=appuser:appuser scripts/start-wine.sh /app/start.sh
+RUN chmod +x /app/start.sh
+
+# 13. Healthcheck and Start Command
+HEALTHCHECK --interval=60s --timeout=10s --start-period=30s --retries=3 \
+  CMD curl -f http://localhost:3000/api/health || exit 1
+
+USER root
+RUN chown -R appuser:appuser /app
+USER appuser
+
+CMD ["/app/start.sh"]
