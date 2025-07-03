@@ -1,10 +1,8 @@
-import { MyContext, MyTextMessageContext, MyWizardSession } from "../../interfaces"
 import { createClient } from "pexels"
 import ffmpeg from "fluent-ffmpeg"
 import axios from "axios"
 import fs from "fs"
 import path from "path"
-import { Scenes } from "telegraf"
 
 async function downloadVideo(url: string, outputPath: string): Promise<string> {
   const response = await axios({
@@ -114,7 +112,7 @@ const resizeVideo = async (inputPath: string, outputPath: string): Promise<void>
   })
 }
 
-export async function createBackgroundVideoCommand(ctx: MyTextMessageContext & Scenes.SceneContextScene<MyContext, MyWizardSession>) {
+export async function createBackgroundVideoCommand(ctx: any) {
   const isRu = ctx.from?.language_code === "ru"
   await ctx.sendChatAction("typing")
 

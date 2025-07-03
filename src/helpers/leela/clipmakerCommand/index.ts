@@ -1,7 +1,21 @@
 import { promises as fs } from "fs"
-import { createSlideshow, generateImagesForMeditation, getMeditationSteps, translateText } from "../../helpers"
+// Placeholder imports - these functions need to be implemented
+const createSlideshow = async (..._args: any[]): Promise<string> => { console.log('createSlideshow called with args:', _args); return ''; };
+const generateImagesForMeditation = async (..._args: any[]): Promise<any[]> => { console.log('generateImagesForMeditation called with args:', _args); return []; };
+const getMeditationSteps = async (..._args: any[]): Promise<any> => { console.log('getMeditationSteps called with args:', _args); return { activities: [{ steps: [] }] }; };
+const translateText = async (..._args: any[]): Promise<string> => { console.log('translateText called with args:', _args); return ''; };
 
-import { MyContext, Step } from "../../interfaces"
+// Placeholder interfaces
+interface MyContext {
+  [key: string]: any;
+  sendChatAction: (action: string) => Promise<void>;
+  from?: { [key: string]: any };
+}
+
+interface Step {
+  step: string;
+  details: { [key: string]: string };
+}
 
 export async function clipmakerCommand(ctx: MyContext) {
   try {

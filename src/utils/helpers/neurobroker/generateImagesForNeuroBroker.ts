@@ -29,7 +29,7 @@ export async function generateImagesForNeuroBroker(steps: Step[]) {
         "ghashtag/modeva:c37189f6adde9084209e850c631d88a5d8de1e94f226e7c7ed2a9446f46897aa";
       console.log(model, "model");
       const input = {
-        prompt: step.details.en,
+        prompt: (step.details as any).en,
         model: "dev",
         lora_scale: 1,
         num_outputs: 1,
@@ -134,21 +134,7 @@ export async function generateImagesForNeuroBroker(steps: Step[]) {
   );
   return imagesWithText;
 }
-// Вспомогательная функция для сохранения изображения
-async function saveImage(url: string, outputPath: string): Promise<void> {
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      console.error(`HTTP error! status: ${response.status}`);
-      return;
-    }
-    const buffer = await response.arrayBuffer();
-    await fs.promises.writeFile(outputPath, Buffer.from(buffer), "binary");
-    console.log(`Изображение сохранено: ${outputPath}`);
-  } catch (error) {
-    console.error("Ошибка при сохранении изображения:", error);
-  }
-}
+// Вспомогательная функция для сохранения изображения удалена как неиспользуемая
 
 export async function reuseImagesForNeuroBroker(): Promise<
   readonly ImageResult[]

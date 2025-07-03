@@ -8,7 +8,7 @@ import { createSVGWithWhiteText } from "./createSVGWithWhiteText"
 export async function makeTextLayers(
   text: string,
   outputPath: string,
-  isTop: boolean,
+  _isTop: boolean,
   logoPath: string,
   reelsType?: string,
   logoTopPadding?: number,

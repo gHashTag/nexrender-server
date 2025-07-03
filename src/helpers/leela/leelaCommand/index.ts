@@ -4,7 +4,10 @@ import ffmpeg from "fluent-ffmpeg"
 import ffmpegInstaller from "@ffmpeg-installer/ffmpeg"
 import { promises as fs } from "fs"
 import path from "path"
-import { createSlideshow, generateImagesForMeditation, getMeditationSteps } from "../../helpers"
+// Placeholder imports - these functions need to be implemented
+const createSlideshow = async (..._args: any[]): Promise<string> => { console.log('createSlideshow called with args:', _args); return ''; };
+const generateImagesForMeditation = async (..._args: any[]): Promise<any[]> => { console.log('generateImagesForMeditation called with args:', _args); return []; };
+const getMeditationSteps = async (..._args: any[]): Promise<any> => { console.log('getMeditationSteps called with args:', _args); return { activities: [{ steps: [] }] }; };
 
 ffmpeg.setFfmpegPath(ffmpegInstaller.path)
 

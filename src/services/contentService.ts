@@ -50,7 +50,7 @@ export const generateContent = async ({
     type,
   });
 
-  const stepsData: readonly Step[] = await Promise.all(
+  const stepsData: Step[] = await Promise.all(
     sellVillaSteps.activities[0].steps.map(
       async (step: Step, index: number) => ({
         step: `Step ${index + 1}`,
@@ -63,7 +63,7 @@ export const generateContent = async ({
     )
   );
 
-  const images = await generateImagesForNeuroBroker(stepsData, "en", false);
+  const images = await generateImagesForNeuroBroker(stepsData);
 
   return { stepsData, images };
 };

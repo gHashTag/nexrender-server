@@ -1,6 +1,6 @@
 import { openai } from "../../core/openai"
 import { addTextOnImage } from "../images/addTextOnImage"
-import { Step } from "../images/generateImagesForMeditation"
+import { Step } from "../../interfaces"
 
 export async function generateImagesForMeditation(steps: Step[]) {
   const imagesWithText: { imagePath: string; text: string }[] = []
@@ -17,7 +17,7 @@ export async function generateImagesForMeditation(steps: Step[]) {
         size: "1024x1792",
       })
 
-      if (response.data[0].url) {
+      if (response.data && response.data[0] && response.data[0].url) {
         const imagePath = response.data[0].url
         const text = `${step.details}`
         const processedImage = await addTextOnImage({ imagePath, text, step: step.step })
