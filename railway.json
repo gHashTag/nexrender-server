@@ -1,7 +1,8 @@
 {
   "build": {
     "builder": "dockerfile",
-    "dockerfilePath": "Dockerfile.wine"
+    "dockerfilePath": "Dockerfile.wine",
+    "buildCommand": "pnpm install && pnpm run build:prod"
   },
   "deploy": {
     "restartPolicyType": "always",
