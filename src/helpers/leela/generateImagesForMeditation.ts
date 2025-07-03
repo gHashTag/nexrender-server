@@ -63,7 +63,7 @@ export async function generateImagesForMeditation(steps: Step[], language: "en" 
         console.log(step, "step");
         try {
           const { addTextOnImage } = await import('../images/addTextOnImage');
-          const processedImage = await addTextOnImage({ imagePath: imagePath as string, text, step: parseInt(step.step) })
+          const processedImage = await addTextOnImage({ imagePath: imagePath as unknown as string, text, step: parseInt(step.step) })
 
           if (processedImage) {
             imagesWithText.push({ imagePath: processedImage.outputPath, text })

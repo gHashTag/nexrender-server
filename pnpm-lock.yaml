@@ -47,6 +47,9 @@ importers:
       openai:
         specifier: ^4.67.3
         version: 4.104.0(encoding@0.1.13)(ws@8.18.0)(zod@3.23.8)
+      pexels:
+        specifier: ^1.4.0
+        version: 1.4.0(encoding@0.1.13)
       replicate:
         specifier: ^0.34.1
         version: 0.34.1
@@ -2089,6 +2092,9 @@ packages:
   peek-readable@4.1.0:
     resolution: {integrity: sha512-ZI3LnwUv5nOGbQzD9c2iDG6toheuXSZP5esSHBjopsXH4dg19soufvpUGA3uohi5anFtGb2lhAVdHzH6R/Evvg==}
     engines: {node: '>=8'}
+
+  pexels@1.4.0:
+    resolution: {integrity: sha512-akpLySokCtw9JHGx7yMavOIAHGVP5721rLUONR/cFKjWkLjUXsHrJ5jndMKss9mx7AEMZRXs7loxEb+vLJf6kA==}
 
   phin@3.7.1:
     resolution: {integrity: sha512-GEazpTWwTZaEQ9RhL7Nyz0WwqilbqgLahDM3D0hxWwmVDI52nXEybHqiN6/elwpkJBhcuj+WbBu+QfT0uhPGfQ==}
@@ -4896,6 +4902,12 @@ snapshots:
   path-type@4.0.0: {}
 
   peek-readable@4.1.0: {}
+
+  pexels@1.4.0(encoding@0.1.13):
+    dependencies:
+      isomorphic-fetch: 3.0.0(encoding@0.1.13)
+    transitivePeerDependencies:
+      - encoding
 
   phin@3.7.1:
     dependencies:

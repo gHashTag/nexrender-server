@@ -69,7 +69,7 @@ const leelaCommand = async (ctx: Context): Promise<void> => {
     // await ctx.replyWithMediaGroup(mediaGroup)
 
     // Получаем пути к изображениям
-    const imagePaths = images.map((img) => img.imagePath)
+    const imagePaths = images.map((img: any) => img.imagePath)
     // Определяем путь для выходного видеофайла
     const outputPath = path.join(process.cwd(), "src", "images", "slideshow.mp4")
 

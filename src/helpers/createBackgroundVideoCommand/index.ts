@@ -84,11 +84,11 @@ async function getBRollVideo(query: string): Promise<string[]> {
     if ("videos" in response && Array.isArray(response.videos)) {
       return response.videos
         .map(
-          (video) =>
+          (video: any) =>
             // Берем первый доступный видеофайл для каждого видео
             video.video_files[0]?.link,
         )
-        .filter((link): link is string => !!link)
+        .filter((link: any): link is string => !!link)
     }
     return []
   } catch (error) {

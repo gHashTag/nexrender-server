@@ -47,7 +47,7 @@ export async function clipmakerCommand(ctx: MyContext) {
     console.log(meditationSteps, "meditationSteps")
 
     const stepsData: Step[] = await Promise.all(
-      meditationSteps.activities[0].steps.map(async (step, index) => ({
+      meditationSteps.activities[0].steps.map(async (step: any, index: number) => ({
         step: `Step ${index + 1}`,
         details: {
           en: step.details,
@@ -73,7 +73,7 @@ export async function clipmakerCommand(ctx: MyContext) {
     const numberTrack = 10
 
     const englishOutputPath = await createSlideshow(
-      englishImages.map((img) => img.imagePath),
+      englishImages.map((img: any) => img.imagePath),
       `src/audio/audio${numberTrack}.mp3`,
       "output_en.mp4",
     )
@@ -99,7 +99,7 @@ export async function clipmakerCommand(ctx: MyContext) {
     // await ctx.replyWithMediaGroup(spanishMediaGroup)
 
     const spanishOutputPath = await createSlideshow(
-      spanishImages.map((img) => img.imagePath),
+      spanishImages.map((img: any) => img.imagePath),
       `src/audio/audio${numberTrack}.mp3`,
       "output_es.mp4",
     )

@@ -66,7 +66,7 @@ export async function generateImagesForNeuroBroker(steps: Step[]) {
           // }
           const outputFilePath = path.join(__dirname, `../images/output_step_${step.step}.png`)
           console.log(outputFilePath, "outputFilePath")
-          const localImagePath = await downloadImage(imagePath, outputFilePath)
+          const localImagePath = await downloadImage(imagePath as unknown as string, outputFilePath)
 
           // Добавляем локальный путь к изображению в массив
           imagesWithText.push({ imagePath: localImagePath, text: "" }) // Оставьте текст пустым или удалите его
