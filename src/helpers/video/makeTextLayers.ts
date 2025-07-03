@@ -1,6 +1,9 @@
 import path from "path"
 import * as fs from "fs/promises"
+import sharp from "sharp"
 import { createYellowAndWhiteText } from "./"
+import { escapeXml } from "../images/escapeXml"
+import { createSVGWithWhiteText } from "./createSVGWithWhiteText"
 
 export async function makeTextLayers(
   text: string,

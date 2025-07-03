@@ -42,7 +42,7 @@ export async function generateImagesForMeditation(steps: Step[], language: "en" 
           console.log(`Попытка генерации изображения для шага ${step.step} (осталось попыток: ${retries})`)
           output = await replicate.run(model, { input })
           console.log(output, "✅ выход output")
-          if (output && output[0]) {
+          if (output && Array.isArray(output) && output[0]) {
             console.log(`Изображение успешно сгенерировано для шага ${step.step}`)
             break
           }
@@ -58,10 +58,11 @@ export async function generateImagesForMeditation(steps: Step[], language: "en" 
       if (output) {
         const imagePath = output
         console.log(imagePath, "imagePath")
-        const text = step.details[language]
-        console.log(text, "text")
-        console.log(step, "step")
+        const text = step.details[language];
+        console.log(text, "text");
+        console.log(step, "step");
         try {
+          const { addTextOnImage } = await import('../images/addTextOnImage');
           const processedImage = await addTextOnImage({ imagePath, text, step: step.step })
 
           if (processedImage) {

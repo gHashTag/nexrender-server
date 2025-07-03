@@ -53,7 +53,7 @@ export async function generateImagesForNeuroBroker(steps: Step[]) {
           );
           output = await replicate.run(model, { input });
           console.log(output, "✅ выход output");
-          if (output && output[0]) {
+          if (output && Array.isArray(output) && output[0]) {
             console.log(
               `Изображение успешно сгенерировано для шага ${step.step}`
             );

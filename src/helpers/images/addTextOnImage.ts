@@ -7,8 +7,8 @@ export const addTextOnImage = async (params: {
   imagePath: string;
   text: string;
   step: number;
-}): Promise<string> => {
+}): Promise<{ outputPath: string }> => {
   console.log('addTextOnImage called with:', params);
   // Placeholder implementation
-  return params.imagePath;
+  return { outputPath: params.imagePath };
 };
