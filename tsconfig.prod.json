@@ -4,7 +4,10 @@
     "skipLibCheck": true,
     "noEmitOnError": false,
     "lib": ["es2017", "DOM", "WebWorker"],
-    "types": ["node"]
+    "types": ["node"],
+    "outDir": "build/main",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
   },
   "exclude": [
     "node_modules/**",

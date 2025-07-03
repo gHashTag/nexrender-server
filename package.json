@@ -16,7 +16,7 @@
     "dev:server": "ts-node src/api/server.ts",
     "dev:worker": "NODE_OPTIONS='--no-warnings' npx @nexrender/worker --binary=\"/Applications/Adobe After Effects 2025/aerender\" --host=http://localhost:3000 --secret=myapisecret",
     "build": "tsc -p tsconfig.json",
-    "build:prod": "tsc --skipLibCheck --noEmitOnError false",
+    "build:prod": "tsc -p tsconfig.prod.json",
     "lint": "eslint src --ext .ts",
     "clean": "rimraf dist"
   },

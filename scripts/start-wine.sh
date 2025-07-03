@@ -50,4 +50,4 @@ trap cleanup SIGTERM SIGINT
 # 6. Start the Nexrender Node.js Server
 echo "🚀 Starting Nexrender server..."
 # Use exec to replace the shell process with the Node process
-exec node build/main/index.js >> /app/logs/nexrender.log 2>&1
+exec node build/main/src/index.js >> /app/logs/nexrender.log 2>&1

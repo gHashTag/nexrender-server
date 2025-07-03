@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  ubuntu-desktop:
+    build:
+      context: .
+      dockerfile: Dockerfile.ubuntu-desktop
+    container_name: nexrender-ubuntu-desktop
+    ports:
+      - "5901:5901"   # VNC порт
+      - "6080:6080"   # noVNC веб-интерфейс  
+      - "3000:3000"   # Nexrender API сервер
+    environment:
+      - VNC_RESOLUTION=1920x1080
+      - VNC_PASSWORD=railway
+      - DISPLAY=:1
+    volumes:
+      # Сохраняем Wine prefix для устойчивости
+      - wine_data:/home/ubuntu/.wine
+      # Монтируем директорию для рендер-файлов
+      - ./renders:/home/ubuntu/renders
+      # Логи Nexrender
+      - ./logs:/home/ubuntu/nexrender-server/logs
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    # Добавляем больше ресурсов для Wine и After Effects
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '2.0'
+        reservations:
+          memory: 2G
+          cpus: '1.0'
+
+volumes:
+  wine_data:
+    driver: local
+
+networks:
+  default:
+    name: nexrender-network

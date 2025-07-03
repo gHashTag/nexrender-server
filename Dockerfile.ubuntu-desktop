@@ -1,0 +1,110 @@
+# 🕉️ Ubuntu Desktop with VNC for Adobe After Effects via Wine
+# "साधुवाद" - "Хорошо сделано"
+
+FROM ubuntu:22.04
+
+# Установка переменных окружения
+ENV DEBIAN_FRONTEND=noninteractive
+ENV DISPLAY=:1
+ENV VNC_PORT=5901
+ENV VNC_RESOLUTION=1920x1080
+ENV VNC_PASSWORD=railway
+
+# Обновление системы и установка необходимых пакетов
+RUN apt-get update && apt-get install -y \
+    ubuntu-desktop-minimal \
+    xfce4 \
+    xfce4-goodies \
+    tightvncserver \
+    novnc \
+    websockify \
+    supervisor \
+    wget \
+    curl \
+    software-properties-common \
+    apt-transport-https \
+    ca-certificates \
+    gnupg \
+    lsb-release \
+    nano \
+    htop \
+    && rm -rf /var/lib/apt/lists/*
+
+# Установка Wine
+RUN dpkg --add-architecture i386 \
+    && mkdir -p /etc/apt/keyrings \
+    && wget -qO /etc/apt/keyrings/winehq-archive.key https://dl.winehq.org/wine-builds/winehq.key \
+    && wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/ubuntu/dists/jammy/winehq-jammy.sources \
+    && apt-get update \
+    && apt-get install -y --install-recommends winehq-stable winetricks
+
+# Установка Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install -g pnpm
+
+# Создание пользователя
+RUN useradd -m -s /bin/bash ubuntu \
+    && echo "ubuntu:railway" | chpasswd \
+    && usermod -aG sudo ubuntu
+
+# Настройка VNC для пользователя ubuntu
+USER ubuntu
+WORKDIR /home/ubuntu
+
+# Настройка VNC сервера
+RUN mkdir -p ~/.vnc \
+    && echo "$VNC_PASSWORD" | vncpasswd -f > ~/.vnc/passwd \
+    && chmod 600 ~/.vnc/passwd
+
+# Настройка XFCE как рабочего стола для VNC
+RUN echo "#!/bin/bash" > ~/.vnc/xstartup \
+    && echo "xrdb $HOME/.Xresources" >> ~/.vnc/xstartup \
+    && echo "startxfce4 &" >> ~/.vnc/xstartup \
+    && chmod +x ~/.vnc/xstartup
+
+# Настройка Wine
+ENV WINEPREFIX=/home/ubuntu/.wine
+ENV WINEARCH=win64
+
+# Копирование проекта
+USER root
+COPY --chown=ubuntu:ubuntu . /home/ubuntu/nexrender-server
+WORKDIR /home/ubuntu/nexrender-server
+
+# Установка зависимостей проекта
+USER ubuntu
+RUN pnpm install
+
+# Создание стартового скрипта
+USER root
+COPY <<EOF /start.sh
+#!/bin/bash
+set -e
+
+# Запуск VNC сервера
+su ubuntu -c "vncserver :1 -geometry $VNC_RESOLUTION -depth 24"
+
+# Запуск noVNC веб-интерфейса
+websockify --web=/usr/share/novnc/ 6080 localhost:5901 &
+
+# Запуск Nexrender сервера
+su ubuntu -c "cd /home/ubuntu/nexrender-server && pnpm run dev:server" &
+
+# Вывод информации
+echo "🖥️ Ubuntu Desktop доступен через VNC:"
+echo "   - VNC: localhost:5901 (пароль: railway)"
+echo "   - Web: http://localhost:6080/vnc.html"
+echo "🚀 Nexrender Server: http://localhost:3000"
+
+# Ожидание
+tail -f /dev/null
+EOF
+
+RUN chmod +x /start.sh
+
+# Экспорт портов
+EXPOSE 5901 6080 3000
+
+# Запуск
+CMD ["/start.sh"]
