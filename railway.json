@@ -1,0 +1,19 @@
+{
+  "build": {
+    "builder": "dockerfile"
+  },
+  "deploy": {
+    "restartPolicyType": "always",
+    "healthcheckPath": "/api/health",
+    "healthcheckTimeout": 300
+  },
+  "environment": {
+    "NODE_ENV": "production",
+    "NEXRENDER_PORT": "$PORT",
+    "NEXRENDER_SECRET": "$NEXRENDER_SECRET",
+    "ELEVENLABS_API_KEY": "$ELEVENLABS_API_KEY",
+    "CREATOMATE_API_KEY": "$CREATOMATE_API_KEY",
+    "SUPABASE_URL": "$SUPABASE_URL",
+    "SUPABASE_ANON_KEY": "$SUPABASE_ANON_KEY"
+  }
+}
