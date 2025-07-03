@@ -1,5 +1,6 @@
 import { MyContext, MyTextMessageContext, MyWizardSession } from "../../interfaces"
 import { createClient } from "pexels"
+import ffmpeg from "fluent-ffmpeg"
 import axios from "axios"
 import fs from "fs"
 import path from "path"

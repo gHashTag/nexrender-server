@@ -8,6 +8,16 @@ export interface MyContext {
   [key: string]: any;
 }
 
+export interface MyTextMessageContext {
+  // Placeholder for text message context
+  [key: string]: any;
+}
+
+export interface MyWizardSession {
+  // Placeholder for wizard session
+  [key: string]: any;
+}
+
 export interface Step {
   step: number;
   details: {

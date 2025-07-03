@@ -1,4 +1,4 @@
-import { Payment } from '@/interfaces/payments.interface';
+import { Payment } from '../../interfaces/payments.interface';
 import { supabase } from '.';
 
 export async function getPaymentsInfoByUsername(username: string): Promise<Payment[]> {

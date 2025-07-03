@@ -1,4 +1,4 @@
-import { BOT_TOKEN } from '@/config';
+import { BOT_TOKEN } from '../../config';
 import { config } from 'dotenv';
 config({ path: `.env.${process.env.NODE_ENV || 'development'}.local` });
 

@@ -1,4 +1,4 @@
-import { supabase } from '@/core/supabase';
+import { supabase } from './index';
 
 export const incrementBalance = async ({ telegram_id, amount }: { telegram_id: string; amount: number }) => {
   const { data, error } = await supabase.from('users').select('balance').eq('telegram_id', telegram_id).single();
