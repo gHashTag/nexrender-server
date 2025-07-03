@@ -1,3 +1,4 @@
+import path from "path"
 import { replicate } from "../../core/replicate"
 import { downloadImage } from "../video/downloadImage"
 import { Step } from "./generateImagesForMeditation"

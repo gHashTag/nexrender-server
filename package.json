@@ -20,6 +20,7 @@
     "clean": "rimraf dist"
   },
   "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@nexrender/core": "^1.57.4",
     "@nexrender/server": "^1.54.3",
     "@nexrender/worker": "^1.57.4",
@@ -31,6 +32,11 @@
     "express": "^4.21.1",
     "fluent-ffmpeg": "^2.1.3",
     "fp-ts": "^2.16.9",
+    "openai": "^4.67.3",
+    "replicate": "^0.34.1",
+    "sharp": "^0.33.5",
+    "telegraf": "^4.16.3",
+    "uuid": "^11.0.3",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -38,11 +44,14 @@
     "@types/express": "^5.0.0",
     "@types/fluent-ffmpeg": "^2.1.27",
     "@types/node": "^22.9.3",
+    "@types/sharp": "^0.32.0",
+    "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.15.0",
     "@typescript-eslint/parser": "^8.15.0",
     "concurrently": "^9.1.0",
     "eslint": "^9.15.0",
     "eslint-plugin-functional": "^7.1.0",
+    "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   },

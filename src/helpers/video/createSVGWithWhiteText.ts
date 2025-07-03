@@ -1,4 +1,4 @@
-import { escapeXml } from "helpers/images/escapeXml"
+import { escapeXml } from "../images/escapeXml"
 
 export function createSVGWithWhiteText(width: number, height: number, text: string) {
   const sentences = text.split(/(?<=[.!?])\s+/) // Разбиваем текст на предложения
